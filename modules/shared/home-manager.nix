@@ -70,7 +70,7 @@ let name = "Edoardo Debenedetti";
         autocrlf = "input";
       };
       diff.external = "difft";
-      commit.gpgsign = false;
+      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
     };
