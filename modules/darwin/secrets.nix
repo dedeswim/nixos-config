@@ -26,12 +26,12 @@ let user = "edoardo"; in
   #   group = "staff";
   # };
 
-  # age.secrets."github-signing-key" = {
-  #   symlink = false;
-  #   path = "/Users/${user}/.ssh/pgp_github.key";
-  #   file =  "${secrets}/github-signing-key.age";
-  #   mode = "600";
-  #   owner = "${user}";
-  # };
+  age.secrets."github-signing-key" = {
+    symlink = false;
+    path = "/Users/${user}/.ssh/pgp_github.key";
+    file =  "${secrets}/github-signing-key.age";
+    mode = "600";
+    owner = "${user}";
+  };
 
 }

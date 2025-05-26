@@ -2,7 +2,7 @@
 
 let name = "Edoardo Debenedetti";
     user = "edoardo";
-    email = "edoardo.debenedetti@inf.ethz.ch"; in
+    email = "edoardo.m.debenedetti@gmail.com"; in
 {
   # Shared shell configuration
   zsh = {
@@ -56,9 +56,10 @@ let name = "Edoardo Debenedetti";
 
   git = {
     enable = true;
-    ignores = [ "*.swp" ];
+    ignores = [ "*.swp" ".DS_Store" ];
     userName = name;
     userEmail = email;
+    delta.enable = true;
     lfs = {
       enable = true;
     };
@@ -68,10 +69,16 @@ let name = "Edoardo Debenedetti";
 	    editor = "vim";
         autocrlf = "input";
       };
+      diff.external = "difft";
       commit.gpgsign = false;
       pull.rebase = true;
       rebase.autoStash = true;
     };
+  };
+
+  gh = {
+    enable = true;
+    settings.git_protocol = "ssh";
   };
 
   vim = {
@@ -353,5 +360,9 @@ let name = "Edoardo Debenedetti";
   atuin = {
     enable = true;
     enableZshIntegration = true;
+  };
+
+  nushell = {
+    enable = true;
   };
 }

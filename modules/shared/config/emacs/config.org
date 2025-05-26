@@ -3,7 +3,7 @@
 
 * Configuration   :emacs:
 ** About my Emacs
-This is my detailed Emacs configuration. It's an ~org~ file that is transpiled to ~emacs-lisp~ as part of the Nix build process. 
+This is my detailed Emacs configuration. It's an ~org~ file that is transpiled to ~emacs-lisp~ as part of the Nix build process.
 
 Why an org file? My Emacs config is large, and this enables me to greatly improve readability of its documentation. I edit this file the same way you're reading it (nicely formatted) as I use Emacs and Emacs speaks org. Sounds complicated, but it's really not; [[https://github.com/dustinlyons/nixos-config/blob/main/nixos/default.nix#L215][just a few lines]] in my Nix config. [[https://github.com/dustinlyons/nixos-config/blob/main/darwin/default.nix#L28][MacOS too.]]
 
@@ -17,7 +17,7 @@ Just me!
 #+NAME: personal-info
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Edoardo Debenedetti"
-    user-mail-address "edoardo.debenedetti@inf.ethz.ch")
+    user-mail-address "edoardo.m.debenedetti@gmail.com")
 #+END_SRC
 
 ** Initialization

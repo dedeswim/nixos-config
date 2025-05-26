@@ -2,11 +2,13 @@
 
 with pkgs; [
   # General packages for development and system management
-  aspell
+  pkgs.aspell
   aspellDicts.en
   bat
   btop
+  claude-code
   coreutils
+  difftastic
   killall
   neofetch
   openssh
@@ -41,7 +43,6 @@ with pkgs; [
 
   # Text and terminal utilities
   btop
-  claude-code
   curl
   difftastic
   du-dust
