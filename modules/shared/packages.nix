@@ -1,79 +1,81 @@
-{ pkgs }:
+{ pkgs, lib }:
 
-with pkgs; [
-  # General packages for development and system management
-  aspell
-  aspellDicts.en
-  bat
-  btop
-  claude-code
-  coreutils
-  difftastic
-  killall
-  neofetch
-  openssh
-  wget
-  zip
+lib.attrValues {
+  inherit (pkgs)
+    # General packages for development and system management
+    aspell
+    bat
+    btop
+    claude-code
+    coreutils
+    difftastic
+    killall
+    neofetch
+    openssh
+    wget
+    zip
 
-  # Encryption and security tools
-  age
-  age-plugin-yubikey
-  gnupg
-  libfido2
+    # Encryption and security tools
+    age
+    age-plugin-yubikey
+    gnupg
+    libfido2
 
-  # Cloud-related tools and SDKs
-  docker
-  docker-compose
-  google-cloud-sdk
+    # Cloud-related tools and SDKs
+    docker
+    docker-compose
+    google-cloud-sdk
 
-  # Media-related packages
-  dejavu_fonts
-  ffmpeg
-  fd
-  font-awesome
-  hack-font
-  noto-fonts
-  noto-fonts-emoji
-  meslo-lgs-nf
+    # Media-related packages
+    dejavu_fonts
+    ffmpeg
+    fd
+    font-awesome
+    hack-font
+    noto-fonts
+    noto-fonts-emoji
+    meslo-lgs-nf
 
-  # Node.js development tools
-  nodePackages.npm # globally install npm
-  nodePackages.prettier
-  nodejs
+    # Node.js development tools
+    nodejs
 
-  # Text and terminal utilities
-  btop
-  curl
-  difftastic
-  du-dust
-  fd
-  hunspell
-  iftop
-  jetbrains-mono
-  jq
-  mosh
-  ripgrep
-  tealdeer
-  texlive.combined.scheme-full
-  tree
-  tmux
-  unrar
-  unzip
-  zenith
-  zoxide
+    # Text and terminal utilities
+    curl
+    du-dust
+    hunspell
+    iftop
+    jetbrains-mono
+    jq
+    mosh
+    ripgrep
+    tealdeer
+    tree
+    tmux
+    unrar
+    unzip
+    zenith
+    zoxide
 
-  # Nix utilities
-  comma
-  nil
-  nixd
-  nixpkgs-fmt
+    # Nix utilities
+    comma
+    nil
+    nixd
+    nixpkgs-fmt
 
-  # Rust stuff
-  (rust-bin.stable.latest.default.override {
+    # Rust stuff
+    rust-analyzer
+
+    # Python dev tools
+    uv
+    ;
+
+  # Packages with dots in their names
+  inherit (pkgs.aspellDicts) en;
+  inherit (pkgs.nodePackages) npm prettier;
+  inherit (pkgs.texlive.combined) scheme-full;
+
+  # Custom packages
+  rust = pkgs.rust-bin.stable.latest.default.override {
     extensions = [ "rust-src" ];
-  })
-  rust-analyzer
-
-  # Python dev tools
-  uv
-]
+  };
+}

@@ -57,7 +57,7 @@ in
     users.${user} = { pkgs, config, lib, ... }:{
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix {};
+        packages = pkgs.callPackage ./packages.nix { inherit pkgs lib; };
         file = lib.mkMerge [
           sharedFiles
           additionalFiles
