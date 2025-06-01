@@ -6,6 +6,7 @@ lib.attrValues {
     aspell
     bat
     btop
+    carapace
     claude-code
     coreutils
     difftastic
