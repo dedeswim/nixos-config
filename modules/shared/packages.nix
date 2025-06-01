@@ -2,7 +2,7 @@
 
 with pkgs; [
   # General packages for development and system management
-  pkgs.aspell
+  aspell
   aspellDicts.en
   bat
   btop
@@ -54,11 +54,13 @@ with pkgs; [
   mosh
   ripgrep
   tealdeer
+  texlive.combined.scheme-full
   tree
   tmux
   unrar
   unzip
   zenith
+  zoxide
 
   # Nix utilities
   comma
@@ -67,7 +69,9 @@ with pkgs; [
   nixpkgs-fmt
 
   # Rust stuff
-  rust-bin.stable.latest.default
+  (rust-bin.stable.latest.default.override {
+    extensions = [ "rust-src" ];
+  })
   rust-analyzer
 
   # Python dev tools

@@ -253,7 +253,7 @@ let user = "edoardo";
         "wheel" # Enable ‘sudo’ for the user.
         "docker"
       ];
-      shell = pkgs.zsh;
+      shell = pkgs.nushell;
       openssh.authorizedKeys.keys = keys;
     };
 
