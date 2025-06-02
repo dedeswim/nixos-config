@@ -5,4 +5,9 @@ shared-packages ++ lib.attrValues {
   inherit (pkgs)
     dockutil
     ;
+
+  inherit (pkgs.jetbrains)
+    pycharm-professional
+    rust-rover
+    ;
 }

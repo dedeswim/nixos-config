@@ -42,7 +42,6 @@ in
       Numbers = 409203825;
       Pages = 409201541;
       "Prime Video" = 1666309574;
-      "Rocket.Chat" = 1086818840;
       Slack = 803453959;
       "Spark Desktop" = 6445813049;
       Telegram = 747648890;
