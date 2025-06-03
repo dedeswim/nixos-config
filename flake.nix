@@ -32,8 +32,8 @@
       flake = false;
     };
     rust-overlay = {
-    url = "github:oxalica/rust-overlay";
-    inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets, rust-overlay } @inputs:
@@ -87,6 +87,7 @@
           inherit system;
           specialArgs = inputs;
           modules = [
+            (import ./modules/shared { inherit rust-overlay; })
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
@@ -111,6 +112,7 @@
         inherit system;
         specialArgs = inputs;
         modules = [
+          (import ./modules/shared { inherit rust-overlay; })
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager {
             home-manager = {

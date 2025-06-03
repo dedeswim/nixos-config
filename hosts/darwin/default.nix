@@ -8,7 +8,7 @@ let user = "edoardo"; in
     ../../modules/darwin/secrets.nix
     ../../modules/darwin/home-manager.nix
     ../../modules/shared
-     agenix.darwinModules.default
+    agenix.darwinModules.default
   ];
 
   # Setup user, packages, programs
