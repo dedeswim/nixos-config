@@ -21,8 +21,7 @@ in
       ".." = "cd ..";
       ":q" = "exit";
       cat = "${bat}/bin/bat";
-      du = "${du-dust}/bin/dust";
-      g = "${gitAndTools.git}/bin/git";
+      du = "${dust}/bin/dust";
       ls = "${eza}/bin/eza";
       la = "ll -a";
       ll = "ls -l --time-style long-iso --icons";
@@ -263,16 +262,19 @@ in
 
   ssh = {
     enable = true;
-
-    controlPath = "~/.ssh/%C"; # ensures the path is unique but also fixed length
-    serverAliveInterval = 300;
-    serverAliveCountMax = 12;
+    enableDefaultConfig = false;
 
     includes = [
       (lib.mkIf pkgs.stdenv.hostPlatform.isLinux "/home/${user}/.ssh/config_external")
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "/Users/${user}/.ssh/config_external")
     ];
     matchBlocks = {
+      "*" = {
+        controlPath = "~/.ssh/%C"; # ensures the path is unique but also fixed length
+        serverAliveInterval = 300;
+        serverAliveCountMax = 12;
+      };
+
       "github.com" = {
         identitiesOnly = true;
         identityFile = "~/.ssh/id_ed25519";
