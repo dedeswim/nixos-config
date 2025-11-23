@@ -1,8 +1,10 @@
 { pkgs, lib, ... }:
 
-let name = "Edoardo Debenedetti";
-    user = "edoardo";
-    email = "edoardo.m.debenedetti@gmail.com"; in
+let
+  name = "Edoardo Debenedetti";
+  user = "edoardo";
+  email = "edoardo.m.debenedetti@gmail.com";
+in
 {
   # Shared shell configuration
   zsh = {
@@ -12,7 +14,7 @@ let name = "Edoardo Debenedetti";
     syntaxHighlighting.enable = true;
     enableCompletion = true;
 
-    plugins = [];
+    plugins = [ ];
 
     shellAliases = with pkgs; {
       # Other
@@ -44,6 +46,7 @@ let name = "Edoardo Debenedetti";
       export PATH=$HOME/.npm-packages/bin:$HOME/bin:$PATH
       export PATH=$HOME/.local/share/bin:$PATH
       export PATH=$HOME/.local/bin:$PATH
+      export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
       # Remove history data we don't want to see
       export HISTIGNORE="pwd:ls:cd"
@@ -52,86 +55,81 @@ let name = "Edoardo Debenedetti";
       shell() {
           nix-shell '<nixpkgs>' -A "$1"
       }
-
-        if [[ ! $(ps -T -o "comm" | tail -n +2 | grep "nu$") && -z $ZSH_EXECUTION_STRING ]]; then
-            if [[ -o login ]]; then
-                LOGIN_OPTION='--login'
-            else
-                LOGIN_OPTION='''
-            fi
-            exec nu "$LOGIN_OPTION"
-        fi
     '';
   };
 
   nushell = {
-    enable = true;
+    enable = false;
     # for editing directly to config.nu
     extraConfig = ''
-        let carapace_completer = {|spans|
-            carapace $spans.0 nushell ...$spans | from json
-        }
-        let zoxide_completer = {|spans|
-            $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
-        }
+      let carapace_completer = {|spans|
+          carapace $spans.0 nushell ...$spans | from json
+      }
+      let zoxide_completer = {|spans|
+          $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+      }
 
-        let multiple_completers = {|spans|
-            match $spans.0 {
-                z => $zoxide_completer
-                _ => $carapace_completer
-            } | do $in $spans
-        }
+      let multiple_completers = {|spans|
+          match $spans.0 {
+              z => $zoxide_completer
+              _ => $carapace_completer
+          } | do $in $spans
+      }
 
-        $env.config = {
-            show_banner: false,
-            completions: {
-            case_sensitive: false # case-sensitive completions
-            quick: true    # set to false to prevent auto-selecting completions
-            partial: true    # set to false to prevent partial filling of the prompt
-            algorithm: "fuzzy"    # prefix or fuzzy
-            external: {
-                # set to false to prevent nushell looking into $env.PATH to find more suggestions
-                enable: true
-                # set to lower can improve completion performance at the cost of omitting some options
-                max_results: 100
-                completer: $multiple_completers # check 'carapace_completer'
-              }
+      $env.config = {
+          show_banner: false,
+          completions: {
+          case_sensitive: false # case-sensitive completions
+          quick: true    # set to false to prevent auto-selecting completions
+          partial: true    # set to false to prevent partial filling of the prompt
+          algorithm: "fuzzy"    # prefix or fuzzy
+          external: {
+              # set to false to prevent nushell looking into $env.PATH to find more suggestions
+              enable: true
+              # set to lower can improve completion performance at the cost of omitting some options
+              max_results: 100
+              completer: $multiple_completers # check 'carapace_completer'
             }
-        }
-        $env.PATH = ($env.PATH | split row (char esep) | append $"($env.HOME)/.local/bin")
-        '';
-        shellAliases = {
-        vi = "hx";
-        vim = "hx";
-        nano = "hx";
-        };
+          }
+      }
+      $env.PATH = ($env.PATH | split row (char esep) | append $"($env.HOME)/.local/bin")
+    '';
+    shellAliases = {
+      vi = "hx";
+      vim = "hx";
+      nano = "hx";
+    };
   };
 
   carapace = {
     enable = true;
-    enableNushellIntegration = true;
   };
 
   zoxide = {
     enable = true;
-    enableNushellIntegration = true;
     enableZshIntegration = true;
   };
 
+  delta = {
+    enable = true;
+    enableGitIntegration = true;
+  };
 
   git = {
     enable = true;
-    ignores = [ "*.swp" ".DS_Store" ];
-    userName = name;
-    userEmail = email;
-    delta.enable = true;
-    lfs = {
-      enable = true;
-    };
-    extraConfig = {
+    ignores = [
+      "*.swp"
+      ".DS_Store"
+    ];
+
+    lfs.enable = true;
+
+    settings = {
+      user.name = name;
+      user.email = email;
       init.defaultBranch = "main";
       core = {
-	    editor = "vim";
+        editor = "vim";
         autocrlf = "input";
       };
       diff.external = "difft";
@@ -148,8 +146,15 @@ let name = "Edoardo Debenedetti";
 
   vim = {
     enable = true;
-    plugins = with pkgs.vimPlugins; [ vim-airline vim-airline-themes vim-startify vim-tmux-navigator ];
-    settings = { ignorecase = true; };
+    plugins = with pkgs.vimPlugins; [
+      vim-airline
+      vim-airline-themes
+      vim-startify
+      vim-tmux-navigator
+    ];
+    settings = {
+      ignorecase = true;
+    };
     extraConfig = ''
       "" General
       set number
@@ -253,8 +258,8 @@ let name = "Edoardo Debenedetti";
 
       let g:airline_theme='bubblegum'
       let g:airline_powerline_fonts = 1
-      '';
-     };
+    '';
+  };
 
   ssh = {
     enable = true;
@@ -264,27 +269,27 @@ let name = "Edoardo Debenedetti";
     serverAliveCountMax = 12;
 
     includes = [
-      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-        "/home/${user}/.ssh/config_external"
-      )
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-        "/Users/${user}/.ssh/config_external"
-      )
+      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux "/home/${user}/.ssh/config_external")
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "/Users/${user}/.ssh/config_external")
     ];
     matchBlocks = {
       "github.com" = {
         identitiesOnly = true;
         identityFile = "~/.ssh/id_ed25519";
       };
-      "euler privsec0 privsec1 spylab0 spylab1 jumphost.inf.ethz.ch" = lib.hm.dag.entryBefore [ "euler" "privsec0" "privsec1" "jumphost.inf.ethz.ch" ] {
-        user = "edebenedetti";
-        identityFile = "~/.ssh/id_ed25519_euler";
-        forwardX11 = true;
-        forwardX11Trusted = true;
-      };
-      "euler privsec0 privsec1 spylab0 spylab1" = lib.hm.dag.entryBefore [ "euler" "privsec0" "privsec1" "spylab0" "spylab1"] {
-        proxyJump = "jumphost.inf.ethz.ch";
-      };
+      "euler privsec0 privsec1 spylab0 spylab1 jumphost.inf.ethz.ch" =
+        lib.hm.dag.entryBefore [ "euler" "privsec0" "privsec1" "jumphost.inf.ethz.ch" ]
+          {
+            user = "edebenedetti";
+            identityFile = "~/.ssh/id_ed25519_euler";
+            forwardX11 = true;
+            forwardX11Trusted = true;
+          };
+      "euler privsec0 privsec1 spylab0 spylab1" =
+        lib.hm.dag.entryBefore [ "euler" "privsec0" "privsec1" "spylab0" "spylab1" ]
+          {
+            proxyJump = "jumphost.inf.ethz.ch";
+          };
       "euler" = {
         hostname = "login.euler.ethz.ch";
       };
@@ -304,37 +309,35 @@ let name = "Edoardo Debenedetti";
         hostname = "lassen.llnl.gov";
         user = "debenede";
       };
-      "ela todi daint" = lib.hm.dag.entryBefore [ "ela" "todi" "daint" ] {
+      "ela clariden" = lib.hm.dag.entryBefore [ "ela" "clariden" ] {
         user = "edebened";
         identityFile = "~/.ssh/cscs-key";
-        forwardX11 = true;
-        forwardX11Trusted = true;
+        forwardAgent = true;
       };
-      "ela" = lib.hm.dag.entryBefore [ "todi" "daint" ] {
+      "ela" = lib.hm.dag.entryBefore [ "clariden" ] {
         hostname = "ela.cscs.ch";
       };
-      "todi daint" = lib.hm.dag.entryBefore [ "todi" "daint" ] {
+      "clariden" = lib.hm.dag.entryBefore [ "clariden" ] {
         proxyJump = "ela";
-      };
-      "todi" = {
-        hostname = "todi.cscs.ch";
-      };
-      "daint" = {
-        hostname = "daint.cscs.ch";
+        hostname = "clariden.cscs.ch";
       };
     };
+    extraConfig = ''
+      # Include devpod-managed config
+      Include ~/.ssh/config.d/devpod
+    '';
   };
 
   tmux = {
     enable = true;
-    shell = "${pkgs.nushell}/bin/nu";
+    shell = "${pkgs.zsh}/bin/zsh";
     plugins = with pkgs.tmuxPlugins; [
       yank
       prefix-highlight
       {
         plugin = power-theme;
         extraConfig = ''
-           set -g @tmux_power_theme 'gold'
+          set -g @tmux_power_theme 'gold'
         '';
       }
       {
@@ -363,8 +366,8 @@ let name = "Edoardo Debenedetti";
       # Key bindings
       # -----------------------------------------------------------------------------
 
-      '';
-    };
+    '';
+  };
 
   starship = {
     enable = true;
@@ -388,6 +391,6 @@ let name = "Edoardo Debenedetti";
     enable = true;
     settings = {
       theme = "onedark";
+    };
   };
-};
 }

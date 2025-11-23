@@ -13,6 +13,8 @@ lib.attrValues {
     killall
     neofetch
     openssh
+    pandoc
+    podman
     wget
     zip
 
@@ -23,8 +25,6 @@ lib.attrValues {
     libfido2
 
     # Cloud-related tools and SDKs
-    docker
-    docker-compose
     google-cloud-sdk
 
     # Media-related packages
@@ -34,7 +34,7 @@ lib.attrValues {
     font-awesome
     hack-font
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     meslo-lgs-nf
 
     # Node.js development tools
@@ -42,7 +42,7 @@ lib.attrValues {
 
     # Text and terminal utilities
     curl
-    du-dust
+    dust
     hunspell
     iftop
     jetbrains-mono
@@ -63,6 +63,8 @@ lib.attrValues {
     nixd
     nixpkgs-fmt
 
+    scrcpy
+
     # Rust stuff
     rust-analyzer
 
@@ -72,7 +74,7 @@ lib.attrValues {
 
   # Packages with dots in their names
   inherit (pkgs.aspellDicts) en;
-  inherit (pkgs.nodePackages) npm prettier;
+  inherit (pkgs.nodePackages) prettier;
   inherit (pkgs.texlive.combined) scheme-full;
 
   # Custom packages
@@ -92,10 +94,10 @@ lib.attrValues {
     };
 
     vendorHash = "sha256-3NEG9o5AF2ZEFWkA9Gub8vn6DNptN6DwVcn/oR8ujW0=";
-    
+
     # Exclude test directories from build
     excludedPackages = [ "integrationtests" ];
-    
+
     # Only build the main binary
     subPackages = [ "." ];
 

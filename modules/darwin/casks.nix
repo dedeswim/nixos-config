@@ -2,9 +2,9 @@ _:
 
 [
   # Development Tools
-  "homebrew/cask/docker"
-  "visual-studio-code"
+  "devpod"
   "ghostty"
+  "visual-studio-code"
 
   # Communication Tools
   "discord"
@@ -14,7 +14,6 @@ _:
   # Utility Tools
   "rectangle"
   "yubico-yubikey-manager"
-  "ollama"
 
   # Entertainment Tools
   "vlc"

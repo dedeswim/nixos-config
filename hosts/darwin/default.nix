@@ -43,10 +43,6 @@ let user = "edoardo"; in
 
         # 120, 94, 68, 35, 25, 15
         InitialKeyRepeat = 15;
-
-        "com.apple.mouse.tapBehavior" = 1;
-        "com.apple.sound.beep.volume" = 0.0;
-        "com.apple.sound.beep.feedback" = 0;
       };
 
       dock = {
@@ -62,7 +58,6 @@ let user = "edoardo"; in
       };
 
       trackpad = {
-        Clicking = true;
         TrackpadThreeFingerDrag = true;
       };
     };
