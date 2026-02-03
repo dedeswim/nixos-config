@@ -324,10 +324,6 @@ in
         hostname = "clariden.cscs.ch";
       };
     };
-    extraConfig = ''
-      # Include devpod-managed config
-      Include ~/.ssh/config.d/devpod
-    '';
   };
 
   tmux = {

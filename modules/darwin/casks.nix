@@ -2,7 +2,6 @@ _:
 
 [
   # Development Tools
-  "devpod"
   "ghostty"
   "visual-studio-code"
 
@@ -14,6 +13,7 @@ _:
   # Utility Tools
   "rectangle"
   "yubico-yubikey-manager"
+  "mac-mouse-fix"
 
   # Entertainment Tools
   "vlc"

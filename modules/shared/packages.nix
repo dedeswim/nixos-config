@@ -7,7 +7,6 @@ lib.attrValues {
     bat
     btop
     carapace
-    claude-code
     coreutils
     difftastic
     killall
@@ -37,9 +36,6 @@ lib.attrValues {
     noto-fonts-color-emoji
     meslo-lgs-nf
 
-    # Node.js development tools
-    nodejs
-
     # Text and terminal utilities
     curl
     dust
@@ -47,7 +43,9 @@ lib.attrValues {
     iftop
     jetbrains-mono
     jq
+    jujutsu
     mosh
+    prek
     ripgrep
     tealdeer
     tree
