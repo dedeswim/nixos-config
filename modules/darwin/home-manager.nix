@@ -49,7 +49,7 @@ in
       "Spark Desktop" = 6445813049;
       Telegram = 747648890;
       "Yubico Authenticator" = 1497506650;
-      WhatsApp = 1147396723;
+      WhatsApp = 310633997;
     };
   };
 

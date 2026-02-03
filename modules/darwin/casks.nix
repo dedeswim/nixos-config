@@ -12,7 +12,7 @@ _:
 
   # Utility Tools
   "rectangle"
-  "yubico-yubikey-manager"
+  "yubico-authenticator"
   "mac-mouse-fix"
 
   # Entertainment Tools
