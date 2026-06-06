@@ -1,0 +1,49 @@
+name: Update flake.lock
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # Mondays at 04:00 UTC
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-flake-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Update flake.lock (public inputs only)
+        uses: DeterminateSystems/update-flake-lock@main
+        with:
+          # The `secrets` input is a private `git+ssh` repo; updating it would
+          # require a deploy key on the runner. Scope the bump to the public
+          # inputs so this workflow needs no extra credentials. Add new public
+          # inputs here when you add them to flake.nix.
+          inputs: >-
+            nixpkgs
+            agenix
+            home-manager
+            darwin
+            nix-homebrew
+            homebrew-bundle
+            homebrew-core
+            homebrew-cask
+            disko
+            rust-overlay
+            llm-agents
+          pr-title: "Update flake.lock"
+          pr-labels: |
+            dependencies
+            automated
+          # Default GITHUB_TOKEN works for opening the PR. Note: PRs opened with
+          # it do NOT trigger other workflows (e.g. lint) — to get CI on the PR,
+          # create a PAT, add it as the `GH_TOKEN_FOR_UPDATES` secret, and swap
+          # the line below to: token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          token: ${{ secrets.GITHUB_TOKEN }}
