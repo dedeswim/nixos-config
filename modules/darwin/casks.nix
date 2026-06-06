@@ -14,6 +14,7 @@ _:
   "rectangle"
   "yubico-authenticator"
   "mac-mouse-fix"
+  "openlogi"
 
   # Entertainment Tools
   "vlc"
