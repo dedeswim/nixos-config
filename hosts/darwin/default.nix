@@ -11,15 +11,15 @@ let user = "edoardo"; in
     agenix.darwinModules.default
   ];
 
-  # Setup user, packages, programs
-  nix = {
-    enable = false;
-    package = pkgs.nix;
-
-    settings = {
-      trusted-users = [ "@admin" "${user}" ];
-      substituters = [ "https://nix-community.cachix.org" "https://cache.nixos.org" ];
-      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
+  # Nix itself is managed by Determinate (determinateNix.enable = true makes
+  # nix-darwin stand down; it owns /etc/nix/nix.conf). Custom nix.conf settings
+  # go through customSettings, which is written to /etc/nix/nix.custom.conf.
+  determinateNix = {
+    enable = true;
+    customSettings = {
+      # numtide cache — supplies the llm-agents.nix prebuilts (codex, …).
+      extra-substituters = [ "https://cache.numtide.com" ];
+      extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
     };
   };
 

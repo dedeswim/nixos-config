@@ -35,8 +35,10 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    llm-agents.url = "github:numtide/llm-agents.nix";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets, rust-overlay } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets, rust-overlay, llm-agents, determinate } @inputs:
     let
       user = "edoardo";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -87,7 +89,8 @@
           inherit system;
           specialArgs = inputs;
           modules = [
-            (import ./modules/shared { inherit rust-overlay; })
+            (import ./modules/shared { inherit rust-overlay llm-agents; })
+            determinate.darwinModules.default
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {

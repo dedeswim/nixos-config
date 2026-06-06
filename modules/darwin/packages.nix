@@ -6,8 +6,8 @@ in
 shared-packages
 ++ lib.attrValues {
   inherit (pkgs)
-    codex
     container
     opencode
     ;
+  inherit (pkgs.llm-agents) codex;
 }
