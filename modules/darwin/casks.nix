@@ -15,6 +15,7 @@ _:
   "yubico-authenticator"
   "mac-mouse-fix"
   "openlogi"
+  "betterdisplay"
 
   # Entertainment Tools
   "vlc"

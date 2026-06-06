@@ -10,7 +10,7 @@ lib.attrValues {
     coreutils
     difftastic
     killall
-    neofetch
+    fastfetch
     openssh
     pandoc
     podman
@@ -68,11 +68,12 @@ lib.attrValues {
 
     # Python dev tools
     uv
+
+    prettier
     ;
 
   # Packages with dots in their names
   inherit (pkgs.aspellDicts) en;
-  inherit (pkgs.nodePackages) prettier;
   inherit (pkgs.texlive.combined) scheme-full;
 
   # Custom packages
