@@ -1,0 +1,32 @@
+name: Lint
+
+# Static analysis only — statix walks the .nix files without evaluating the
+# flake, so it needs no access to the private `secrets` input. (A full
+# `nix flake check` / config build would, plus a macOS runner, so it lives
+# outside CI for now.)
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '.github/**'
+      - '**/*.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '.github/**'
+      - '**/*.md'
+  workflow_dispatch: {}
+
+jobs:
+  statix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Run statix
+        run: nix run --extra-experimental-features 'nix-command flakes' nixpkgs#statix -- check .
