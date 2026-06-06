@@ -268,7 +268,7 @@ in
       (lib.mkIf pkgs.stdenv.hostPlatform.isLinux "/home/${user}/.ssh/config_external")
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "/Users/${user}/.ssh/config_external")
     ];
-    matchBlocks = {
+    settings = {
       "*" = {
         controlPath = "~/.ssh/%C"; # ensures the path is unique but also fixed length
         serverAliveInterval = 300;
