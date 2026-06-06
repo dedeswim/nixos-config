@@ -63,16 +63,18 @@ let user = "edoardo"; in
     };
   };
 
-  networking.computerName = "MacBook Pro of Edoardo";
-  networking.hostName = "edoardos-macbook-pro";
-  networking.knownNetworkServices = [
-    "Wi-Fi"
-    "USB 10/100/1000 LAN"
-  ];
-  networking.dns = [
-    "1.1.1.1"
-    "8.8.8.8"
-  ];
+  networking = {
+    computerName = "MacBook Pro of Edoardo";
+    hostName = "edoardos-macbook-pro";
+    knownNetworkServices = [
+      "Wi-Fi"
+      "USB 10/100/1000 LAN"
+    ];
+    dns = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
+  };
 
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
