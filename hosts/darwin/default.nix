@@ -17,6 +17,9 @@ let user = "edoardo"; in
   determinateNix = {
     enable = true;
     customSettings = {
+      # Keep the primary user trusted (the Determinate installer set this in
+      # nix.custom.conf; we now manage that file, so re-declare it here).
+      extra-trusted-users = [ user ];
       # numtide cache — supplies the llm-agents.nix prebuilts (codex, …).
       extra-substituters = [ "https://cache.numtide.com" ];
       extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];

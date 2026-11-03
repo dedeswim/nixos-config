@@ -17,6 +17,6 @@
           (filter (n: match ".*\\.nix" n != null ||
                       pathExists (path + ("/" + n + "/default.nix")))
                   (attrNames (readDir path)))
-      ++ [ rust-overlay.overlays.default llm-agents.overlays.default ];
+      ++ [ rust-overlay.overlays.default llm-agents.overlays.shared-nixpkgs ];
   };
 }

@@ -74,7 +74,7 @@ lib.attrValues {
 
   # Packages with dots in their names
   inherit (pkgs.aspellDicts) en;
-  inherit (pkgs.texlive.combined) scheme-full;
+  inherit (pkgs) texliveFull;
 
   # Custom packages
   rust = pkgs.rust-bin.stable.latest.default.override {
