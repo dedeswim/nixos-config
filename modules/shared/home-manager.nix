@@ -34,6 +34,11 @@ in
       search = "rg -p --glob '!node_modules/*'  $@";
     };
 
+    profileExtra = lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+      export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+    '';
+
     initContent = lib.mkBefore ''
       if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh

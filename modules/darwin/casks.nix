@@ -9,8 +9,11 @@ _:
   "discord"
   "notion"
   "zoom"
+  "slack"
+  "telegram"
 
   # Utility Tools
+  "bitwarden"
   "rectangle"
   "yubico-authenticator"
   "mac-mouse-fix"

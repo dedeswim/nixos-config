@@ -38,24 +38,20 @@ in
     # you may receive an error message "Redownload Unavailable with This Apple ID".
     # This message is safe to ignore. (https://github.com/dustinlyons/nixos-config/issues/83)
 
+    # Only apps that are App-Store-exclusive (no Homebrew cask) live here.
+    # Everything with a cask is in casks.nix — mas (pinned at 2.2.2 in nixpkgs)
+    # is unreliable for installs. See nix-darwin#1722.
     masApps = {
-      Amphetamine = 1666309574;
-      Bitwarden = 1352778147;
       Keynote = 409183694;
       Numbers = 409203825;
       Pages = 409201541;
-      "Prime Video" = 1666309574;
-      Slack = 803453959;
-      "Spark Desktop" = 6445813049;
-      Telegram = 747648890;
-      "Yubico Authenticator" = 1497506650;
-      WhatsApp = 310633997;
     };
   };
 
   # Enable home-manager
   home-manager = {
     useGlobalPkgs = true;
+    backupFileExtension = "hm-backup";
     users.${user} =
       {
         pkgs,
@@ -91,6 +87,7 @@ in
       username = user;
       entries = [
         { path = "/Applications/Safari.app/"; }
+        { path = "/Applications/Google Chrome.app/"; }
         { path = "/System/Applications/Calendar.app/"; }
         { path = "/System/Applications/Music.app/"; }
         { path = "/System/Applications/System Settings.app/"; }
@@ -98,7 +95,7 @@ in
         { path = "/Applications/Slack.app/"; }
         { path = "/Applications/Ghostty.app/"; }
         { path = "/Applications/Zed.app/"; }
-        { path = "/Applications/Spark Desktop.app/"; }
+        { path = "/Applications/Claude.app/"; }
       ];
     };
   };
