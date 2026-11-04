@@ -1,6 +1,4 @@
-{ agenix, pkgs, lib, ... }:
-
-let user = "edoardo"; in
+{ agenix, pkgs, user, ... }:
 
 {
 
@@ -26,13 +24,13 @@ let user = "edoardo"; in
     };
   };
 
-  # Load configuration that is shared across systems
+  # User packages (shared + darwin) are installed via home-manager in
+  # modules/darwin/home-manager.nix.
   environment.systemPackages = [
     agenix.packages."${pkgs.stdenv.hostPlatform.system}".default
-  ] ++ (import ../../modules/shared/packages.nix { inherit pkgs lib; });
+  ];
 
   system = {
-    checks.verifyNixPath = false;
     primaryUser = user;
     stateVersion = 4;
 

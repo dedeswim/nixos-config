@@ -69,7 +69,6 @@ The foundation that the darwin module builds on. Contains:
 - **`packages.nix`**: Darwin-specific packages
 - **`secrets.nix`**: Age-encrypted secrets (GitHub signing key)
 - **`dock/`**: Declarative dock management using dockutil
-- **`files.nix`**: macOS-specific files
 
 ### Configuration Flow
 
@@ -123,9 +122,7 @@ Create a new `.nix` file in `overlays/` - it will automatically load on the next
 
 ### Modifying Configuration Files
 
-Static configuration files (dotfiles, configs) should be added to the appropriate `files.nix`:
-- `modules/shared/files.nix` for base files
-- `modules/darwin/files.nix` for macOS-only files
+Static configuration files (dotfiles, configs) go in `modules/shared/files.nix`.
 
 These files become immutable after deployment.
 
@@ -146,7 +143,7 @@ For detailed module structure, see the README files:
 
 ## Configuration Details
 
-**Primary User**: edoardo
+**Primary User**: edoardo (defined once as `user` in `flake.nix` and passed to modules via `specialArgs`)
 - Shell: zsh with starship prompt, atuin, zoxide
 - Editors: vim (extensive config), helix
 - Version Control: Git with GPG signing, difftastic for diffs
@@ -157,5 +154,5 @@ For detailed module structure, see the README files:
 **Nixpkgs Configuration**:
 - Channel: nixos-unstable
 - Unfree packages: Allowed
-- Broken packages: Allowed
+- Broken packages: Not allowed
 - Insecure packages: Not allowed
