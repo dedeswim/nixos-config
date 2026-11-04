@@ -4,27 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a modern, flake-based NixOS configuration that supports both:
-- **NixOS** (Linux systems)
-- **nix-darwin** (macOS systems)
+This is a flake-based **nix-darwin** configuration for a single Apple Silicon Mac (`aarch64-darwin`). (It was forked from a template that also supported NixOS; the Linux side has been removed.)
 
-The configuration uses a three-tier module hierarchy to maximize code reuse while allowing platform-specific customization. Key features include agenix for secrets management, home-manager for user-level configuration, nix-homebrew for macOS packages, and disko for disk partitioning on NixOS.
+Configuration is split into a shared base module and a macOS module. Key features include agenix for secrets management, home-manager for user-level configuration, and nix-homebrew for Homebrew casks.
 
 ## Common Development Commands
 
 ### Building and Switching
 
-**macOS (Darwin):**
 ```bash
 nix run .#build          # Build without switching (test changes)
-nix run .#build-switch   # Build and activate new configuration
+nix run .#build-switch   # Build and activate new configuration (needs sudo)
 nix run .#rollback       # Rollback to previous generation (interactive)
 ```
 
-**NixOS (Linux):**
-```bash
-nix run .#build-switch   # Build and switch to new configuration
-```
+Flakes only see files tracked by git: `git add` new files before building.
 
 ### SSH Key Management
 
@@ -38,7 +32,7 @@ nix run .#check-keys     # Verify all required keys are present
 
 ```bash
 nix run .#apply          # Interactive first-time setup
-                         # Collects user info, GitHub credentials, host details
+                         # Collects user info, GitHub credentials
                          # Performs token replacement throughout config
 ```
 
@@ -53,27 +47,22 @@ nix flake show           # Show available outputs
 ### Manual Rebuild (if needed)
 
 ```bash
-# macOS
-darwin-rebuild switch --flake .#aarch64-darwin
-
-# NixOS
-sudo nixos-rebuild switch --flake .#x86_64-linux
+sudo darwin-rebuild switch --flake .#aarch64-darwin
 ```
 
 ## Architecture and Structure
 
-### Three-Tier Module Hierarchy
+### Module Layout
 
-The repository follows a clear separation of concerns across three module directories:
+The repository splits configuration across two module directories:
 
-#### 1. `modules/shared/` - Cross-Platform Configuration
+#### 1. `modules/shared/` - Base Configuration
 
-The foundation shared by both platforms. Contains:
+The foundation that the darwin module builds on. Contains:
 - **`home-manager.nix`**: Most shared configuration lives here (zsh, vim, git, tmux, ssh, starship, helix)
-- **`packages.nix`**: Common packages (70+ tools including dev tools, fonts, nix utilities, Rust, Python)
+- **`packages.nix`**: Base packages (dev tools, fonts, nix utilities, Rust, Python)
 - **`default.nix`**: Nixpkgs configuration and overlay loading
 - **`files.nix`**: Public keys and immutable static configuration files
-- **`config/`**: Non-Nix configuration files
 
 **Custom packages**: Includes `mcp-language-server` built from source.
 
@@ -86,26 +75,12 @@ The foundation shared by both platforms. Contains:
 - **`dock/`**: Declarative dock management using dockutil
 - **`files.nix`**: macOS-specific files
 
-#### 3. `modules/nixos/` - Linux-Specific Configuration
-
-- **`home-manager.nix`**: Desktop environment setup (polybar, dunst, screen-locker, GTK theme)
-- **`packages.nix`**: Linux-specific packages
-- **`secrets.nix`**: Age-encrypted secrets for Linux
-- **`disk-config.nix`**: Disko disk partitioning (EFI + ext4 root)
-- **`files.nix`**: Linux-specific configuration files
-- **`config/`**: Desktop configuration (polybar, rofi, window manager)
-
-**Desktop Environment**: BSPWM window manager + Polybar status bar + Picom compositor + LightDM display manager.
-
 ### Configuration Flow
 
-Both Darwin and NixOS hosts follow this pattern:
-1. Import platform-specific secrets module
-2. Import shared module (which loads overlays and base config)
-3. Import platform-specific modules
-4. Import agenix module for secrets management
-
-The shared configuration is the foundation, extended by platform-specific customization.
+`flake.nix` builds `darwinConfigurations.aarch64-darwin` from:
+1. The shared module (nixpkgs config, overlays)
+2. Determinate, home-manager and nix-homebrew modules
+3. `hosts/darwin`, which imports `modules/darwin/secrets.nix`, `modules/darwin/home-manager.nix`, `modules/shared`, and agenix
 
 ### Key Architectural Patterns
 
@@ -115,16 +90,15 @@ The shared configuration is the foundation, extended by platform-specific custom
 
 **Secrets Management**: Uses agenix with age encryption. Keys stored at:
 - Identity: `~/.ssh/id_ed25519`
-- Darwin: GitHub signing key at `~/.ssh/pgp_github.key`
+- GitHub signing key at `~/.ssh/pgp_github.key`
 - Public keys in `shared/files.nix`
 - Private secrets repo: `git+ssh://git@github.com/dedeswim/nix-secrets.git`
 
-**Token Replacement System**: The `apply` script uses tokens (`%USER%`, `%EMAIL%`, `%DISK%`, `%INTERFACE%`, etc.) for initial setup configuration.
+**Token Replacement System**: The `apply` script uses tokens (`%USER%`, `%EMAIL%`, etc.) for initial setup configuration.
 
-**Platform-Specific Package Lists**: Each tier has its own `packages.nix`:
-- Shared: Cross-platform tools and utilities
-- Darwin: macOS-specific apps
-- NixOS: Linux-specific tools and desktop apps
+**Package Lists**: Each module has its own `packages.nix`:
+- Shared: Base tools and utilities
+- Darwin: macOS-specific packages
 
 ### Integration Points
 
@@ -132,7 +106,6 @@ The shared configuration is the foundation, extended by platform-specific custom
 - **agenix**: Age-encrypted secrets
 - **nix-darwin**: macOS system configuration
 - **nix-homebrew**: Declarative homebrew management for macOS (casks and Mac App Store apps)
-- **disko**: Disk partitioning for NixOS installations
 - **rust-overlay**: Rust toolchain management
 
 ## Important Conventions
@@ -140,16 +113,15 @@ The shared configuration is the foundation, extended by platform-specific custom
 ### Working with Modules
 
 - Most shared user configuration is in `modules/shared/home-manager.nix`
-- System-level configuration is in `modules/{darwin,nixos}/default.nix`
-- Host-specific settings go in `hosts/{darwin,nixos}/default.nix`
+- macOS user/homebrew/dock configuration is in `modules/darwin/home-manager.nix`
+- System-level and host-specific settings go in `hosts/darwin/default.nix`
 
 ### Adding Packages
 
 Add packages to the appropriate `packages.nix` file:
-- Cross-platform packages: `modules/shared/packages.nix`
+- Base packages: `modules/shared/packages.nix`
 - macOS packages: `modules/darwin/packages.nix`
-- Linux packages: `modules/nixos/packages.nix`
-- Homebrew casks (macOS only): `modules/darwin/casks.nix`
+- Homebrew casks: `modules/darwin/casks.nix`
 
 ### Adding Overlays
 
@@ -158,9 +130,8 @@ Create a new `.nix` file in `overlays/` - it will automatically load on the next
 ### Modifying Configuration Files
 
 Static configuration files (dotfiles, configs) should be added to the appropriate `files.nix`:
-- `modules/shared/files.nix` for cross-platform files
+- `modules/shared/files.nix` for base files
 - `modules/darwin/files.nix` for macOS-only files
-- `modules/nixos/files.nix` for Linux-only files
 
 These files become immutable after deployment.
 
@@ -177,7 +148,6 @@ Secrets are managed with agenix:
 For detailed module structure, see the README files:
 - `modules/shared/README.md` - Shared module structure
 - `modules/darwin/README.md` - Darwin module structure
-- `modules/nixos/README.md` - NixOS module structure
 - `overlays/README.md` - Overlay documentation
 
 ## Configuration Details
@@ -188,9 +158,7 @@ For detailed module structure, see the README files:
 - Version Control: Git with GPG signing, difftastic for diffs
 - Terminal Multiplexer: tmux with custom configuration
 
-**System Support**:
-- Linux: x86_64-linux, aarch64-linux
-- macOS: aarch64-darwin (Apple Silicon), x86_64-darwin (Intel)
+**System Support**: aarch64-darwin (Apple Silicon) only
 
 **Nixpkgs Configuration**:
 - Channel: nixos-unstable
