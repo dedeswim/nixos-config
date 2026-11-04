@@ -28,13 +28,9 @@ nix run .#copy-keys      # Copy keys from USB drive to ~/.ssh/
 nix run .#check-keys     # Verify all required keys are present
 ```
 
-### Initial Setup
+### Bootstrapping a New Mac
 
-```bash
-nix run .#apply          # Interactive first-time setup
-                         # Collects user info, GitHub credentials
-                         # Performs token replacement throughout config
-```
+Install Nix (Determinate installer), clone the repo, run `create-keys` or `copy-keys` and add the key to GitHub (needed to fetch the private secrets repo), then `nix run .#build-switch`. It runs the freshly built `darwin-rebuild`, so nix-darwin doesn't need to be installed first.
 
 ### Standard Flake Commands
 
@@ -93,8 +89,6 @@ The foundation that the darwin module builds on. Contains:
 - GitHub signing key at `~/.ssh/pgp_github.key`
 - Public keys in `shared/files.nix`
 - Private secrets repo: `git+ssh://git@github.com/dedeswim/nix-secrets.git`
-
-**Token Replacement System**: The `apply` script uses tokens (`%USER%`, `%EMAIL%`, etc.) for initial setup configuration.
 
 **Package Lists**: Each module has its own `packages.nix`:
 - Shared: Base tools and utilities

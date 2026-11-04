@@ -34,18 +34,9 @@ nix run .#create-keys
 
 Add the generated `~/.ssh/id_ed25519.pub` to your GitHub account.
 
-### 4. Run initial setup
+### 4. Build and switch
 
-```bash
-nix run .#apply
-```
-
-This will prompt for:
-- Username
-- Email and name (for git)
-- GitHub username and secrets repository name
-
-### 5. Build and switch
+The first build fetches the private `nix-secrets` repo over SSH, so the key from step 3 must already be added to GitHub.
 
 ```bash
 nix run .#build-switch
@@ -55,7 +46,6 @@ nix run .#build-switch
 
 | Command | Description |
 |---------|-------------|
-| `nix run .#apply` | Initial setup - configure user details |
 | `nix run .#build` | Build without switching (test changes) |
 | `nix run .#build-switch` | Build and activate configuration |
 | `nix run .#rollback` | Rollback to a previous generation |
