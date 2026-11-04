@@ -34,7 +34,7 @@ in
       search = "rg -p --glob '!node_modules/*'  $@";
     };
 
-    profileExtra = lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+    profileExtra = ''
       eval "$(/opt/homebrew/bin/brew shellenv)"
       export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
     '';
@@ -270,8 +270,7 @@ in
     enableDefaultConfig = false;
 
     includes = [
-      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux "/home/${user}/.ssh/config_external")
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "/Users/${user}/.ssh/config_external")
+      "/Users/${user}/.ssh/config_external"
     ];
     settings = {
       "*" = {

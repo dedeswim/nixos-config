@@ -32,10 +32,8 @@ jobs:
             home-manager
             darwin
             nix-homebrew
-            homebrew-bundle
             homebrew-core
             homebrew-cask
-            disko
             rust-overlay
             llm-agents
           pr-title: "Update flake.lock"
