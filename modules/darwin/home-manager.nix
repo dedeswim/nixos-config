@@ -1,10 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, user, ... }:
 
 let
-  user = "edoardo";
-  # Define the content of your file as a derivation
   sharedFiles = import ../shared/files.nix { inherit config pkgs; };
-  additionalFiles = import ./files.nix { inherit user config pkgs; };
 in
 {
   imports = [
@@ -63,16 +60,13 @@ in
         home = {
           enableNixpkgsReleaseCheck = false;
           packages = pkgs.callPackage ./packages.nix { inherit pkgs lib; };
-          file = lib.mkMerge [
-            sharedFiles
-            additionalFiles
-          ];
+          file = sharedFiles;
 
           stateVersion = "25.05";
         };
         programs = {
         }
-        // import ../shared/home-manager.nix { inherit config pkgs lib; };
+        // import ../shared/home-manager.nix { inherit config pkgs lib user; };
 
         # Marked broken Oct 20, 2022 check later to remove this
         # https://github.com/nix-community/home-manager/issues/3344
